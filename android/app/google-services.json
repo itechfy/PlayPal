@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "752586541921",
+    "project_id": "play-pal-a1403",
+    "storage_bucket": "play-pal-a1403.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752586541921:android:9a181a6b6f3ca49fd09320",
+        "android_client_info": {
+          "package_name": "com.techfy.playpal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "752586541921-b7eiamhqokvu1hc7po355pvs2mrn9c6e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.techfy.playpal",
+            "certificate_hash": "b837dbc00f4970886ff2a9949ebbb1108efc1c20"
+          }
+        },
+        {
+          "client_id": "752586541921-64i0jtkujl5ipba7h498dnpk1s48r5oi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbCgT3j79mYtb5w46B5laSdoWUjZi5T14"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752586541921-64i0jtkujl5ipba7h498dnpk1s48r5oi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

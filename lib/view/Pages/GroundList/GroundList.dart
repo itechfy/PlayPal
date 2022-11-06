@@ -82,15 +82,18 @@ class _GroundListState extends State<GroundList> {
         body: SafeArea(
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  customRadio("assets/imgs/Football-ico.png", 0),
-                  SizedBox(
-                    width: 3,
-                  ),
-                  customRadio("assets/imgs/Cricket-ico.png", 1),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(top: 5, bottom: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    customRadio("assets/imgs/Football-ico.png", 0),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    customRadio("assets/imgs/Cricket-ico.png", 1),
+                  ],
+                ),
               ),
               GestureDetector(
                 onTap: (() => {}),
@@ -154,27 +157,42 @@ class _GroundListState extends State<GroundList> {
                                       alignment: Alignment.bottomCenter),
                                 ),
                                 child: Stack(children: [
-                                  Container(
-                                    color: Colors.white,
-                                    margin: EdgeInsets.fromLTRB(5, 5, 0, 0),
-                                    width: double.maxFinite,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Container(
-                                          height: 3,
-                                          width: 3,
-                                          decoration: BoxDecoration(
-                                            color: Colors.red,
-                                            borderRadius:
-                                                BorderRadius.circular(30),
+                                  FittedBox(
+                                    child: Container(
+                                      margin: EdgeInsets.fromLTRB(5, 5, 0, 0),
+                                      height: 24,
+                                      padding:
+                                          EdgeInsets.only(left: 10, right: 10),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(50)),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Container(
+                                            height: 3,
+                                            width: 3,
+                                            decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(city.status)
-                                      ],
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            city.status,
+                                            style: TextStyle(
+                                              color: Color(0xff989898),
+                                              fontSize: 12,
+                                              fontFamily: "Syne",
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   )
                                 ]),

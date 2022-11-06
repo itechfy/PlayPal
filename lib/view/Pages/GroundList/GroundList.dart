@@ -14,6 +14,7 @@ class _GroundListState extends State<GroundList> {
       []; //either index[0] for cricket[] or index[1] for football[]
   List<City> _cityGrounds = []; // storing city's grounds.
   bool _loading = true;
+  int selected = 0;
 
   @override
   void initState() {
@@ -22,13 +23,41 @@ class _GroundListState extends State<GroundList> {
     GroundService.getGrounds().then((grounds) {
       setState(() {
         _grounds = grounds;
-        _cityGrounds =
-            _grounds[0].islamabad; // cricket grounds on index[0] with islamabad
-        print(_grounds.length);
-        print(_cityGrounds[0].name);
+        onChangeSports();
         _loading = false;
       });
     });
+  }
+
+  void onChangeSports() {
+    _loading = true;
+    setState(() {
+      _cityGrounds = _grounds[selected]
+          .islamabad; // cricket grounds on index[0] with islamabad
+      print(_grounds.length);
+      print(_cityGrounds[0].name);
+      _loading = false;
+    });
+  }
+
+  Widget customRadio(String icon, int index) {
+    return OutlinedButton(
+      onPressed: () {
+        setState(() {
+          selected = index;
+          print(selected);
+          onChangeSports();
+        });
+      },
+      child: Image.asset(icon),
+      style: OutlinedButton.styleFrom(
+        fixedSize: Size(57, 57),
+        shape: CircleBorder(),
+        side: BorderSide.none,
+        backgroundColor:
+            (selected == index) ? Color(0xffA91079) : Color(0xff290629),
+      ),
+    );
   }
 
   @override
@@ -53,15 +82,16 @@ class _GroundListState extends State<GroundList> {
         body: SafeArea(
           child: Column(
             children: [
-              Flexible(
-                  child: ListView.builder(
-                      itemCount: null == _grounds ? 0 : _grounds.length,
-                      itemBuilder: (context, index) {
-                        Ground ground = _grounds[index];
-                        return ListTile(
-                          title: Text(ground.id),
-                        );
-                      })),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  customRadio("assets/imgs/Football-ico.png", 0),
+                  SizedBox(
+                    width: 3,
+                  ),
+                  customRadio("assets/imgs/Cricket-ico.png", 1),
+                ],
+              ),
               GestureDetector(
                 onTap: (() => {}),
                 child: Container(

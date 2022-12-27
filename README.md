@@ -1,3 +1,2 @@
-# Playpal - Fetching Grounds from an API
-
+# Playpal - Invite your PAL
 

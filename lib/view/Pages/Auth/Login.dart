@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:playpal/models/validators/passwordValidator.dart';
-import 'package:playpal/models/validators/phoneNumValidator.dart';
+import 'package:playpal/view/Pages/Auth/Signup.dart';
+import 'package:provider/provider.dart';
+
+import '../../../utils/firebase.utils.dart';
+import '../../../view_model/user_provider.dart';
 
 class LoginWidget extends StatefulWidget {
-  const LoginWidget({Key? key}) : super(key: key);
+  String? role;
+
+  LoginWidget({Key? key, this.role}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _LoginWidgetState createState() => _LoginWidgetState();
 }
 
 class _LoginWidgetState extends State<LoginWidget> {
-  bool _isObscure = true;
   TextEditingController? textController1;
-  TextEditingController? textController2;
+  // TextEditingController? textController2;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
 
@@ -22,7 +25,12 @@ class _LoginWidgetState extends State<LoginWidget> {
   void initState() {
     super.initState();
     textController1 = TextEditingController();
-    textController2 = TextEditingController();
+    //  textController2 = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -97,7 +105,18 @@ class _LoginWidgetState extends State<LoginWidget> {
                                 autofocus: true,
                                 obscureText: false,
                                 validator: (value) {
-                                  return isMobileNumberValid(value);
+                                  final phoneRegex =
+                                      RegExp(r'(0|\+?92)3\d{9,11}$');
+                                  if (phoneRegex
+                                      .hasMatch(textController1!.text.trim())) {
+                                  } else if (textController1!.text
+                                      .trim()
+                                      .isEmpty) {
+                                    value = "Please enter your phone number";
+                                    return value;
+                                  } else {
+                                    return "Wrong format, try looking 03315970XXX ";
+                                  }
                                 },
                                 decoration: InputDecoration(
                                   contentPadding:
@@ -142,130 +161,130 @@ class _LoginWidgetState extends State<LoginWidget> {
                         SizedBox(
                           height: 15,
                         ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: textController2,
-                                autofocus: true,
-                                obscureText: _isObscure,
-                                enableSuggestions: false,
-                                autocorrect: false,
-                                validator: (value) {
-                                  String pwd = isPasswordValid(value);
-                                  pwd != ''
-                                      ? ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                          SnackBar(
-                                            behavior: SnackBarBehavior.floating,
-                                            duration: new Duration(seconds: 3),
-                                            content: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                // add your preferred icon here
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 10.0),
-                                                  child: Icon(
-                                                    Icons.info_outline,
-                                                    color: Colors.red,
-                                                  ),
-                                                ),
-                                                // add your preferred text content here
-                                                Flexible(
-                                                  child: Text(
-                                                    pwd,
-                                                    overflow: TextOverflow.clip,
-                                                    style: TextStyle(
-                                                        color: Colors.red),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            backgroundColor: Colors.white,
-                                          ),
-                                        )
-                                      : '';
-                                },
-                                decoration: InputDecoration(
-                                  hintText: 'Password',
-                                  hintStyle: const TextStyle(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Color(0xFF570A57),
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Color(0xFFA91079),
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  filled: true,
-                                  fillColor: const Color(0xFF570A57),
-                                  prefixIcon: const Icon(
-                                    Icons.lock_outlined,
-                                    color: Color(0xFFF806CC),
-                                  ),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _isObscure
-                                          ? Icons.remove_red_eye_outlined
-                                          : Icons.visibility_off_outlined,
-                                      color: Color(0xFFF806CC),
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _isObscure = !_isObscure;
-                                      });
-                                    },
-                                  ),
-                                  errorStyle: TextStyle(
-                                    color: Color.fromARGB(255, 255, 90, 90),
-                                  ),
-                                ),
-                                style: const TextStyle(
-                                  fontFamily: 'Syne',
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                                keyboardType: TextInputType.visiblePassword,
-                              ),
-                            )
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisSize: MainAxisSize.max,
+                        //   children: [
+                        //     Expanded(
+                        //       child: TextFormField(
+                        //         controller: textController2,
+                        //         autofocus: true,
+                        //         obscureText: _isObscure,
+                        //         enableSuggestions: false,
+                        //         autocorrect: false,
+                        //         validator: (value) {
+                        //           String pwd = isPasswordValid(value);
+                        //           pwd != ''
+                        //               ? ScaffoldMessenger.of(context)
+                        //                   .showSnackBar(
+                        //                   SnackBar(
+                        //                     behavior: SnackBarBehavior.floating,
+                        //                     duration: new Duration(seconds: 3),
+                        //                     content: Row(
+                        //                       mainAxisSize: MainAxisSize.max,
+                        //                       children: [
+                        //                         // add your preferred icon here
+                        //                         Padding(
+                        //                           padding:
+                        //                               const EdgeInsets.only(
+                        //                                   right: 10.0),
+                        //                           child: Icon(
+                        //                             Icons.info_outline,
+                        //                             color: Colors.red,
+                        //                           ),
+                        //                         ),
+                        //                         // add your preferred text content here
+                        //                         Flexible(
+                        //                           child: Text(
+                        //                             pwd,
+                        //                             overflow: TextOverflow.clip,
+                        //                             style: TextStyle(
+                        //                                 color: Colors.red),
+                        //                           ),
+                        //                         ),
+                        //                       ],
+                        //                     ),
+                        //                     backgroundColor: Colors.white,
+                        //                   ),
+                        //                 )
+                        //               : '';
+                        //         },
+                        //         decoration: InputDecoration(
+                        //           hintText: 'Password',
+                        //           hintStyle: const TextStyle(
+                        //             fontFamily: 'Poppins',
+                        //             color: Colors.white,
+                        //           ),
+                        //           enabledBorder: OutlineInputBorder(
+                        //             borderSide: const BorderSide(
+                        //               color: Color(0xFF570A57),
+                        //               width: 1,
+                        //             ),
+                        //             borderRadius: BorderRadius.circular(10),
+                        //           ),
+                        //           focusedBorder: OutlineInputBorder(
+                        //             borderSide: const BorderSide(
+                        //               color: Color(0xFFA91079),
+                        //               width: 1,
+                        //             ),
+                        //             borderRadius: BorderRadius.circular(10),
+                        //           ),
+                        //           filled: true,
+                        //           fillColor: const Color(0xFF570A57),
+                        //           prefixIcon: const Icon(
+                        //             Icons.lock_outlined,
+                        //             color: Color(0xFFF806CC),
+                        //           ),
+                        //           suffixIcon: IconButton(
+                        //             icon: Icon(
+                        //               _isObscure
+                        //                   ? Icons.remove_red_eye_outlined
+                        //                   : Icons.visibility_off_outlined,
+                        //               color: Color(0xFFF806CC),
+                        //             ),
+                        //             onPressed: () {
+                        //               setState(() {
+                        //                 _isObscure = !_isObscure;
+                        //               });
+                        //             },
+                        //           ),
+                        //           errorStyle: TextStyle(
+                        //             color: Color.fromARGB(255, 255, 90, 90),
+                        //           ),
+                        //         ),
+                        //         style: const TextStyle(
+                        //           fontFamily: 'Syne',
+                        //           color: Colors.white,
+                        //           fontSize: 16,
+                        //         ),
+                        //         keyboardType: TextInputType.visiblePassword,
+                        //       ),
+                        //     )
+                        //   ],
+                        // ),
 
-                        SizedBox(
-                            width: double.infinity,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton(
-                                  onPressed: () => {},
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                                    child: Text(
-                                      "Forget password?",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            )),
-                        // button
+                        // SizedBox(
+                        //     width: double.infinity,
+                        //     child: Row(
+                        //       mainAxisAlignment: MainAxisAlignment.end,
+                        //       children: [
+                        //         TextButton(
+                        //           onPressed: () => {},
+                        //           child: Padding(
+                        //             padding:
+                        //                 const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                        //             child: Text(
+                        //               "Forget password?",
+                        //               style: TextStyle(
+                        //                 color: Colors.white,
+                        //                 fontWeight: FontWeight.w400,
+                        //                 fontSize: 13,
+                        //               ),
+                        //             ),
+                        //           ),
+                        //         )
+                        //       ],
+                        //     )),
+                        // // button
                         DecoratedBox(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -299,12 +318,20 @@ class _LoginWidgetState extends State<LoginWidget> {
                               onPressed: () {
                                 // Validate returns true if the form is valid, or false otherwise.
                                 if (_formKey.currentState!.validate()) {
-                                  // If the form is valid, display a snackbar. In the real world,
-                                  // you'd often call a server or save the information in a database.
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text('Processing Data')),
-                                  );
+                                  // If the form is valid, display a snackbar
+                                  var phoneNumber =
+                                      textController1!.text.trim();
+
+                                  phoneNumber =
+                                      phoneNumber.startsWith(RegExp(r'0'))
+                                          ? phoneNumber.replaceFirst('0', "+92")
+                                          : phoneNumber;
+
+                                  registerUser(
+                                      widget.role, "", phoneNumber, context);
+                                  // Send OTP
+                                } else {
+                                  print("Phone number is incorrect");
                                 }
                               },
                               child: const Text(
@@ -324,7 +351,13 @@ class _LoginWidgetState extends State<LoginWidget> {
                       width: double.infinity,
                       child: TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/signup');
+                           context.read<UserProvider>().setRole(widget.role);
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignUpWidget(
+                                        role: widget.role,
+                                      )));
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.transparent,

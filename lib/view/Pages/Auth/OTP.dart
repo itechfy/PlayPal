@@ -4,14 +4,24 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:playpal/services/user.services.dart';
+import 'package:playpal/view/Pages/Navbar/coachNavbar.dart';
+import 'package:playpal/view/Pages/Navbar/playerNavbar.dart';
+import 'package:provider/provider.dart';
 
-import '../Home/home.dart';
+import '../../../view_model/user_provider.dart';
 
 class OTP extends StatefulWidget {
+  final String? displayName;
   final String? phoneNumber;
   final String verificationId;
-  OTP({Key? key, required this.verificationId, required this.phoneNumber})
-      : super(key: key);
+
+  OTP({
+    Key? key,
+    required this.displayName,
+    required this.verificationId,
+    required this.phoneNumber,
+  }) : super(key: key);
 
   @override
   State<OTP> createState() => _OTPState();
@@ -25,10 +35,17 @@ class _OTPState extends State<OTP> {
   @override
   void initState() {
     super.initState();
+    // print(widget.displayName);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // do something
       startTimer();
     });
+  }
+
+  @override
+  void dispose() {
+    countdownTimer!.cancel();
+    super.dispose();
   }
 
   /// Timer related methods ///
@@ -124,8 +141,8 @@ class _OTPState extends State<OTP> {
                       SizedBox(
                         width: 5,
                       ),
-                      const Text(
-                        '+923315970886',
+                      Text(
+                        "${widget.phoneNumber}",
                         style: TextStyle(color: Color(0xffFF5BE1)),
                       ),
                     ],
@@ -472,20 +489,57 @@ class _OTPState extends State<OTP> {
                           // assert(smsCode is int);
                           // print(smsCode);
 
-                          FirebaseAuth auth = FirebaseAuth.instance;
-
                           AuthCredential _credential =
                               PhoneAuthProvider.credential(
                                   verificationId: widget.verificationId,
                                   smsCode: newCode);
                           auth
                               .signInWithCredential(_credential)
-                              .then((UserCredential result) {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        HomeScreen(result.user)));
+                              .then((UserCredential result) async {
+                            await result.user!.reload();
+                            Provider.of<UserProvider>(context, listen: false)
+                                .setUser();
+                            // User? u = Provider.of<UserProvider>(context,
+                            //         listen: false)
+                            //     .user;
+                            if (widget.displayName != '') {
+                              await result.user!
+                                  .updateDisplayName(widget.displayName);
+
+                              UserService.createUser(
+                                  Provider.of<UserProvider>(context,
+                                          listen: false)
+                                      .user!
+                                      .uid,
+                                  Provider.of<UserProvider>(context,
+                                          listen: false)
+                                      .role,
+                                  widget.displayName,
+                                  widget.phoneNumber);
+                            }
+                            print("Role is");
+                            print(Provider.of<UserProvider>(context,
+                                    listen: false)
+                                .role);
+                            //saving user to database
+
+                            if (Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .role ==
+                                'player') {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PlayerNavbar()));
+                            } else if (Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .role ==
+                                'coaches') {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CoachNavbar()));
+                            }
                           }).catchError((e) {
                             print(e);
                           });

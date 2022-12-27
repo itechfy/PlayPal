@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:playpal/models/User/user.model.dart';
 import 'package:playpal/utils/firebase.utils.dart';
+import 'package:playpal/view/Pages/Auth/Login.dart';
+import 'package:playpal/view_model/user_provider.dart';
+import 'package:provider/provider.dart';
+
+import '../../../models/validators/phoneNumValidator.dart';
 
 class SignUpWidget extends StatefulWidget {
-  const SignUpWidget({Key? key}) : super(key: key);
+  String? role;
+  SignUpWidget({Key? key, this.role}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -13,6 +21,7 @@ class SignUpWidget extends StatefulWidget {
 class _SignUpWidgetState extends State<SignUpWidget> {
   TextEditingController? textController1;
   TextEditingController? textController2;
+  bool isLoading = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -204,6 +213,9 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                             controller: textController2,
                             autofocus: true,
                             obscureText: false,
+                            validator: (value) {
+                              return isMobileNumberValid(value);
+                            },
                             decoration: InputDecoration(
                               hintText: 'Phone number',
                               hintStyle: const TextStyle(
@@ -275,15 +287,41 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         child: TextButton(
                           style: TextButton.styleFrom(),
                           onPressed: () {
-                            registerUser(textController2!.text.trim(), context);
+                            //role, displayName, phoneNumber
+
+                            setState(() {
+                              isLoading = true;
+                            });
+                            registerUser(
+                                widget.role,
+                                textController1!.text.trim(),
+                                textController2!.text.trim(),
+                                context);
                             // Navigator.pushNamed(context, '/otp');
+                            setState(() {
+                              isLoading = false;
+                            });
                           },
-                          child: const Text(
-                            "Continue",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
+                          child: isLoading
+                              ? Center(
+                                  child: SizedBox(
+                                    height: 100,
+                                    child: SpinKitRing(
+                                      color: Color(0xffA91079),
+                                      lineWidth: 5.0,
+                                      size: 30,
+                                      duration: Duration(
+                                        milliseconds: 4000,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : const Text(
+                                  "Continue",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
                         ),
                       ),
                     ),
@@ -303,7 +341,15 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                             primary: Colors.transparent,
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, '/signin');
+                            //context.read<UserProvider>().setRole(widget.role);
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginWidget(
+                                        role: widget.role,
+                                      )),
+                            );
                           },
                           child: const Text(
                             "Login",

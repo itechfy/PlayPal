@@ -3,15 +3,18 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:playpal/view/Pages/AccessLocation/Location_access.dart';
+import 'package:playpal/view/Pages/ContinueAs/continueas.dart';
 import 'package:playpal/view/Pages/GroundList/GroundList.dart';
 import 'package:playpal/view/pages/Splash/splash.dart';
 import 'package:playpal/view/Pages/Loaders/splash_loader.dart';
-import 'package:playpal/view/pages/Auth/Login.dart';
-import 'package:playpal/view/pages/Auth/Signup.dart';
 import 'package:playpal/view/pages/onboarding/views/onboarding_screens.dart';
+import 'package:playpal/view_model/user_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_)=> UserProvider())
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -30,8 +33,9 @@ class MyApp extends StatelessWidget {
         '/onboard': (context) => const OnBoardingScreen(),
         '/second': (context) => const SplashLoader(),
         '/third': (context) => const Splash(),
-        '/signup': (context) => const SignUpWidget(),
-        '/signin': (context) => const LoginWidget(),
+        '/continueAs': (context) => const ContinueAs(),
+        // '/signup': (context) => const SignUpWidget(),
+        // '/signin': (context) => const LoginWidget(),
         //'/otp': (context) => const OTP(),
         '/access': (context) => const LocationAccess(),
         '/grounds': (context) => const GroundList(),

@@ -18,12 +18,12 @@ class _SplashLoaderState extends State<SplashLoader> {
   }
 
   startTime() async {
-    var duration = const Duration(seconds: 3);
+    var duration = const Duration(seconds: 2);
     return Timer(duration, route);
   }
 
   route() {
-    Navigator.pushNamed(context, '/third');
+    Navigator.pushNamed(context, '/continueAs');
   }
 
   @override

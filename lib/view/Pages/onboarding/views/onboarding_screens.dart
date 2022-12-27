@@ -76,7 +76,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         child: ElevatedButton(
                           onPressed: () {
                             _pageIndex == 2
-                                ? Navigator.pushNamed(context, '/grounds')
+                                ? Navigator.pushNamed(context, '/second')
                                 : _pageController.nextPage(
                                     duration: const Duration(milliseconds: 300),
                                     curve: Curves.ease);
